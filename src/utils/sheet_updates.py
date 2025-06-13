@@ -33,7 +33,7 @@ def write_stats_json(writers: list, stats_data: List[List[Statline]]):
     """
     Parses statline data for a list of stat sheets and returns a list of value entry objects
     """
-    writers.insert(0, "Combined")
+    writers.insert(0, "Overall")
     data = []
     for i in range(len(writers)):
         statsheet = [['Player', 'Questions', '15', '10', '-5', 'W', 'R', 'PPG', 'Points']]

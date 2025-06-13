@@ -15,7 +15,7 @@ class Registry:
         else:
             self._scoresheets.append(score_id)
         self._statsheets.append(create_spreadsheet(f'STATS_{self._rooms}'))
-        spreadsheet_batch_update(self._statsheets[-1], [add_sheet("Combined")])
+        spreadsheet_batch_update(self._statsheets[-1], [add_sheet("Overall")])
         get_sheet_names(self._statsheets[-1])
 
     def rooms(self):
@@ -30,6 +30,6 @@ class Registry:
     def combined(self):
         if not self._combined:
             self._combined = create_spreadsheet('COMBINED')
-            spreadsheet_batch_update(self._combined, [add_sheet("Combined")])
+            spreadsheet_batch_update(self._combined, [add_sheet("Overall")])
             get_sheet_names(self._combined)
         return self._combined

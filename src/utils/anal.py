@@ -26,14 +26,14 @@ def parse_scoresheet(writer: str, scores: Scoresheet, writer_stats: Dict[str, St
 
 def merge_stats(stats_list: List[Dict[str, Statline]]):
 
-    combined_stats = dict()
+    overall_stats = dict()
     for statsheet in stats_list:
         for player in statsheet:
-            if player not in combined_stats:
-                combined_stats[player] = Statline(name=player)
-            combined_stats[player].add_stats(statsheet[player])
+            if player not in overall_stats:
+                overall_stats[player] = Statline(name=player)
+            overall_stats[player].add_stats(statsheet[player])
     
-    return combined_stats
+    return overall_stats
 
 def scoresheet_anal(writers: list, scoresheets_list: list, rooms=1):
     """
@@ -54,9 +54,9 @@ def scoresheet_anal(writers: list, scoresheets_list: list, rooms=1):
             parse_scoresheet(writers[i], scoresheet, writer_stats)
         writer_stats_list.append(writer_stats)
 
-    combined = merge_stats(writer_stats_list)
+    overall = merge_stats(writer_stats_list)
 
-    full_stats = [sorted([combined[player] for player in combined], reverse=True, key=points_key)]
+    full_stats = [sorted([overall[player] for player in overall], reverse=True, key=points_key)]
     for statsheet in writer_stats_list:
         full_stats.append(sorted([statsheet[player] for player in statsheet], reverse=True, key=points_key))
 

@@ -20,17 +20,20 @@ registry = Registry()
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/addroom")
-async def addroom(id: str | None = None):
+@app.post("/addroom")
+async def addroom(response: Response, id: str | None = None):
+    response.headers['Access-Control-Allow-Origin'] = "http://localhost:3000"
     registry.add_room(id)
     return {"new room number": registry.rooms()}
 
 @app.get("/rooms")
-async def rooms():
+async def rooms(response: Response):
+    response.headers['Access-Control-Allow-Origin'] = "http://localhost:3000"
     return {"rooms": registry.rooms()}
 
 @app.get("/roomstats/{room_number}")
-async def room_stats(room_number: int):
+async def room_stats(room_number: int, response: Response):
+    response.headers['Access-Control-Allow-Origin'] = "http://localhost:3000"
     if room_number > registry.rooms():
         return HTTPException(404, "No room with that number exists")
     scores_id = registry.scoresheet_id(room_number)
@@ -59,11 +62,20 @@ async def combined_stats(response: Response):
         "statsheets": all_stats
         }
 
-@app.post("/packresults")
-async def add_packet_results(name: Annotated[str, Query(max_length=30)], room: int, results: Scoresheet, response: Response):
+@app.post("/submitpacket/{room}")
+async def add_packet_results(room: int, writer: Annotated[str, Query(max_length=30)], results: Scoresheet, response: Response):
     response.headers['Access-Control-Allow-Origin'] = "http://localhost:3000"
     response.status_code = 201
-    spreadsheet_batch_update(registry.scoresheet_id(room), [add_sheet(name)])
-    spreadsheet_batch_update(registry.statsheet_id(room), [add_sheet(name)])
-    values_batch_update(registry.scoresheet_id(room), [write_scoresheet_json(name, results)])
+    spreadsheet_batch_update(registry.scoresheet_id(room), [add_sheet(writer)])
+    spreadsheet_batch_update(registry.statsheet_id(room), [add_sheet(writer)])
+    values_batch_update(registry.scoresheet_id(room), [write_scoresheet_json(writer, results)])
     return response
+
+@app.options("/submitpacket/{room}")
+async def submit_preflight(room: int):
+    headers = {
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Access-Control-Allow-Methods': 'POST, GET, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': '*'
+    }
+    return Response(status_code=204, headers=headers)
