@@ -76,7 +76,7 @@ class Statline(BaseModel):
         if self.played == 0:
             return 0
         else:
-            return (15*self.powers + 10*self.gets + -5*self.negs) / self.played
+            return (15*self.powers + 10*self.gets + -5*self.negs) / (self.played / 20)
         
     def add_buzz(self, value: int):
         if value == 10:
