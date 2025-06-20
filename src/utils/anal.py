@@ -1,5 +1,6 @@
 """
-Analysis functions for reading scoresheets and combining stats
+Analysis functions for reading scoresheets and combining stats.
+File name is in homage to RIT Quiz Bowl traditions and the previous stats analysis tool.
 """
 
 from typing import List, Dict
@@ -25,7 +26,10 @@ def parse_scoresheet(writer: str, scores: Scoresheet, writer_stats: Dict[str, St
         writer_stats[writer].written = len(scores.results)
 
 def merge_stats(stats_list: List[Dict[str, Statline]]):
-
+    """
+    Creates a single list of player-statline objects that represent the overall stats
+    from each input list.
+    """
     overall_stats = dict()
     for statsheet in stats_list:
         for player in statsheet:

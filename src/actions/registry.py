@@ -2,7 +2,17 @@ from actions.sheets import create_spreadsheet, spreadsheet_batch_update, get_she
 from utils.sheet_updates import add_sheet
 
 class Registry:
+    """
+    Stores the id of each Google sheet used for the application's storage.
+
+    Methods:
+    - Add a room (creates a new scoresheet and statsheet)
+    - Get the number of rooms
+    - Get the id of a specific scoresheet or statsheet
+    """
     def __init__(self):
+        
+        #These properties should only be accessed directly by the /loadsheets API method
         self._rooms = 0
         self._scoresheets = []
         self._statsheets = []

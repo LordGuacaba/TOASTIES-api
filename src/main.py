@@ -77,6 +77,10 @@ async def add_packet_results(room: int, writer: Annotated[str, Query(max_length=
 
 @app.post("/loadsheets")
 async def load_sheets(ids: dict):
+    """
+    This call will load the ids of previously populated scoresheets and statsheets into the registry. For testing
+    purposes or crash recovery.
+    """
     REGISTRY._scoresheets = ids["scoresheets"]
     REGISTRY._statsheets = ids["statsheets"]
     REGISTRY._combined = ids["combined"]
