@@ -37,7 +37,11 @@ def get_room_stats(number: int):
 def get_combined_stats():
     combined_id = REGISTRY.combined()
     ids = REGISTRY._scoresheets
-    writers = get_sheet_names(ids[0])
+    writers_lists = [get_sheet_names(id) for id in ids]
+    writers = writers_lists[0]
+    for lst in writers_lists:
+        if len(lst) < len(writers):
+            writers = lst
     ranges = [get_scoresheet_values(name) for name in writers]
     room_sheets = [batch_get_values(id, ranges) for id in ids]
     all_stats = scoresheet_anal(writers, room_sheets, REGISTRY.rooms())
