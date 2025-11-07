@@ -82,6 +82,7 @@ async def add_packet_results(room: int, writer: Annotated[str, Query(max_length=
     if writer not in get_sheet_names(REGISTRY.scoresheet_id(room)):
         spreadsheet_batch_update(REGISTRY.scoresheet_id(room), [add_sheet(writer)])
         spreadsheet_batch_update(REGISTRY.statsheet_id(room), [add_sheet(writer)])
+    if writer not in get_sheet_names(REGISTRY.combined()):
         spreadsheet_batch_update(REGISTRY.combined(), [add_sheet(writer)])
     values_batch_update(REGISTRY.scoresheet_id(room), [write_scoresheet_json(writer, results)])
     return response
