@@ -50,7 +50,7 @@ def create_spreadsheet(title: str):
     print(f"An error occurred: {error}")
     return error
   
-def get_sheet_names(id: str):
+def get_sheet_names(id: str) -> list[str]:
     """
     Gets the name of each sheet in the spreadsheet with the given id. Deletes a sheet named "Sheet 1" if it exists
     """
@@ -61,6 +61,8 @@ def get_sheet_names(id: str):
     sheets = spreadsheet.get("sheets")
     for sheet in sheets:
         if sheet['properties']['title'] == "Sheet1":
+            if len(sheets) == 1:
+                return []
             spreadsheet_batch_update(id, [{"deleteSheet": {"sheetId": sheet['properties']['sheetId']}}])
             continue
         sheet_names.append(sheet['properties']['title'])
