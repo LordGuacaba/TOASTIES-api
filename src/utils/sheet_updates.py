@@ -51,3 +51,9 @@ def get_scoresheet_values(name: str):
     Returns a range for retrieving scoresheet data for one packet.
     """
     return f'{name}!A2:C'
+
+def get_roster(name: str):
+    """
+    Returns a range for retrieving the roster for a game.
+    """
+    return f'{name}!B2:B'

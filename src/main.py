@@ -87,6 +87,20 @@ async def add_packet_results(room: int, writer: Annotated[str, Query(max_length=
     values_batch_update(REGISTRY.scoresheet_id(room), [write_scoresheet_json(writer, results)])
     return response
 
+@app.get("/roster/{room}")
+async def get_last_roster(room: int, response: Response):
+    response.headers['Access-Control-Allow-Origin'] = "*"
+    sheet_id = REGISTRY.scoresheet_id(room)
+    writers = get_sheet_names(sheet_id)
+    if len(writers) == 0:
+        return { "roster": [] }
+    stuff = batch_get_values(sheet_id, [get_roster(writers[-1])])[0]
+    unique_players = []
+    for name in stuff:
+        if len(name) > 0 and name[0] not in unique_players:
+            unique_players.append(name[0])
+    return { "roster": unique_players }
+
 @app.post("/loadsheets")
 async def load_sheets(ids: dict):
     """
@@ -109,4 +123,4 @@ async def submit_preflight(room: int):
     return Response(status_code=204, headers=headers)
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", log_level="info", reload=True, host="10.117.5.224", port=8000)
+    uvicorn.run("main:app", log_level="info", reload=True, host="localhost", port=8000)
